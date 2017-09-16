@@ -1,73 +1,56 @@
-HAP-NodeJS
-==========
-
-[![NPM version](https://badge.fury.io/js/hap-nodejs.svg)](http://badge.fury.io/js/hap-nodejs)
-
-HAP-NodeJS is a Node.js implementation of HomeKit Accessory Server.
-
-With this project, you should be able to create your own HomeKit Accessory on Raspberry Pi, Intel Edison or any other platform that can run Node.js :)
-
-The implementation may not 100% follow the HAP MFi Specification since MFi program doesn't allow individual developer to join.
-
-Remember to run `npm install` before actually running the server.
-
-Users can define their own accessories in: accessories/*name*_accessory.js files, where name is a short description of the accessory. All defined accessories get loaded on server start. You can define accessories using an object literal notation (see [Fan_accessory.js](accessories/Fan_accessory.js) for an example) or you can use the API (see below).
-
-You can use the following command to start the HAP Server in Bridged mode:
-
-```sh
-node BridgedCore.js
-```
-
-Or if you wish to host each Accessory as an independent HomeKit device:
-
-```sh
-node Core.js
-```
-
-The HAP-NodeJS library uses the [debug](https://github.com/visionmedia/debug) library for log output. You can print some or all logs by setting the `DEBUG` environment variable. For instance, to see all debug logs while running the server:
-
-```sh
-DEBUG=* node BridgedCore.js
-```
-
-HOMEKIT PROTOCOL
-================
-
-Hint: the Homekit Application Protocol (HAP) allows that you can pair a Homekit device with one device. As soon as the Homekit device is paired, its not possible to pair with another iOS device anymore.
-
-API
-===
-
-HAP-NodeJS provides a set of classes you can use to construct Accessories programatically. For an example implementation, see [Lock_accessory.js](accessories/Lock_accessory.js).
-
-The key classes intended for use by API consumers are:
-
-  * [Accessory](lib/Accessory.js): Represents a HomeKit device that can be published on your local network.
-  * [Bridge](lib/Bridge.js): A kind of Accessory that can host other Accessories "behind" it while only publishing a single device.
-  * [Service](lib/Service.js): Represents a set of grouped values necessary to provide a logical function. Most of the time, when you think of a supported HomeKit device like "Thermostat" or "Door Lock", you're actualy thinking of a Service. Accessories can expose multiple services.
-  * [Characteristic](lib/Characteristic.js): Represents a particular typed variable assigned to a Service, for instance the `LockMechanism` Service contains a `CurrentDoorState` Characteristic describing whether the door is currently locked.
-
-All known built-in Service and Characteristic types that HomeKit supports are exposed as a separate subclass in [HomeKitTypes](lib/gen/HomeKitTypes.js).
-
-See each of the corresponding class files for more explanation and notes.
-
-Notes
-=====
-
-Special thanks to [Alex Skalozub](https://twitter.com/pieceofsummer), who reverse engineered the server side HAP. ~~You can find his research at [here](https://gist.github.com/pieceofsummer/13272bf76ac1d6b58a30).~~ (Sadly, on Nov 4, Apple sent the [DMCA](https://github.com/github/dmca/blob/master/2014/2014-11-04-Apple.md) request to Github to remove the research.)
-
-[There](http://instagram.com/p/t4cPlcDksQ/) is a video demo running this project on Intel Edison.
-
-If you are interested in HAP over BTLE, you might want to check [this](https://gist.github.com/KhaosT/6ff09ba71d306d4c1079).
-
-Projects based on HAP-NodeJS
+#HomeKit Philips Hue Switches
 ============================
 
-* [Homebridge](https://github.com/nfarina/homebridge) - HomeKit support for the impatient - Pluggable HomeKit Bridge. Plugins available for  e.g. Pilight, Telldus TDtool, Savant, Netatmo, Open Pixel Control, HomeWizard, Fritz!Box, LG WebOS TV, Home Assistant, HomeMatic and many many more.
-* [OpenHAB-HomeKit-Bridge](https://github.com/htreu/OpenHAB-HomeKit-Bridge) - OpenHAB HomeKit Bridge bridges openHAB items to Apple´s HomeKit Accessory Protocol.
-* [homekit2mqtt](https://github.com/hobbyquaker/homekit2mqtt) - HomeKit to MQTT bridge.
-* [pimatic-hap](https://github.com/michbeck100/pimatic-hap) - Pimatic homekit bridge.
-* [node-red-contrib-homekit](https://github.com/mschm/node-red-contrib-homekit) - Node-RED nodes to simulate Apple HomeKit devices.
-* [ioBroker.homekit](https://github.com/ioBroker/ioBroker.homekit2) - connect ioBroker to HomeKit.
-* [AccessoryServer](https://github.com/Appyx/AccessoryServer) - HomeKit integration for IR/RF/IP-devices
+This repo will serve as instruction on how to build, and set up physical HomeKit switches which will serve as controllers for your Philips Hue bulbs, or for that matter anything else you wish by editing the code!
+
+
+##What you will need (Per switch notated with *)
+============================
+
+### For the hub
+* A Rasberry Pi
+
+### For the switch
+* An ESP8266 esp-01 board* (Make sure to get the version with upgraded 1Mb memory)
+* A USB to ESP8266 [adapter](https://www.amazon.co.uk/gp/product/B074FXDH3D)
+* A solderable momentary switch button*
+
+### For the power supply
+* 1x 1000uF capacitor
+* 1x 100nF ceramic disk capacitor
+* 1x HT7333-A TO92 Voltage Reducer
+* 1x 3.7V battery of your choice (I used 18650 lithium ion batteries)
+
+## Steps
+============================
+
+Please note, these steps are from my personal experience working on a MacBook pro running macOS sierra. They may vary depending on operating system, however there are an abundance of instructional videos and blog-posts out there so you should be fine to work it out!
+
+### Raspberry pi setup
+
+We will be using the Raspberry pi as both the MQTT broker, and as the HAP-NodeJS server.
+
+1. [Install node](https://github.com/sdesalas/node-pi-zero) on the Raspberry pi
+1. Pull this repo into a working directory on the Raspberry pi
+1. Setup HAP-NodeJS to run using `forever` on boot ([link](https://github.com/legotheboss/YouTube-files/wiki/(RPi)-Start-HAP-on-Reboot))
+1. [Install mosquitto](https://learn.adafruit.com/diy-esp8266-home-security-with-lua-and-mqtt/configuring-mqtt-on-the-raspberry-pi) on the raspberry pi (Only follow steps 1-2)
+
+### ESP8266 setup
+
+#### Flashing the device
+1. [Download](https://mongoose-os.com/software.html) and install mongoose-os
+1. Connect the ESP8266 GPIO pin to ground to enable flashing mode on the chip. To do this I connected a switch to the correct pins on the back of my USB adapter so I can easily switch between flashing mode and normal mode.
+1. Plug the USB adapter into your computer, with the ESP8266 plugged in.
+1. Run this command in the terminal: `mos flash mos-esp8266-1M-latest` 
+1. When the terminal starts reading:
+```
+Connecting to ESP8266 ROM, attempt 1 of 10,
+Connecting to ESP8266 ROM, attempt 2 of 10,
+```
+plug in the ESP8266 module to the USB adapter.
+1. When flashing has succeeded run: `mos wifi ROUTER_SSID ROUTER_PASSWORD` and wait for the chip to be configured
+
+#### Coding the device
+1. Run `mos` in the terminal, which should open up the mos gui in a browser window. Return your USB adapter to non-flashing mode and reinsert it with the ESP8266 attached. 
+1. Open `conf0.json` in the device file browser, and edit the `mqtt->server` property to be the IP address of your Raspberry Pi.
+1.  

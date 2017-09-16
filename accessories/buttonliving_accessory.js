@@ -10,15 +10,15 @@ var philipsHue = require("./phillipsHue.js");
 
 //These 3 values MUST be unique for every accessory you make. If they are not then IOS may have issues and mess
 //the entire homekit setup and you will have to reset homekit on IOS.
-var ACCESSORY_NAME = "Test Button";     //give you accessory a name!
+var ACCESSORY_NAME = "Living Room";     //give you accessory a name!
 var ACCESSORY_USERNAME = "11:22:33:44:55:66";   //this is like a mac address for the accessory
 var ACCESSORY_SERIAL = '123456789abc'           //unique serial address for the accessory
 
 var MQTT_ID = 'homekit' + ACCESSORY_SERIAL
 var MQTT_IP = '127.0.0.1'
 
-var relayTopic = 'topic/state'       //this will be the topic that you publish to, to update the accessory
-var statusTopic = relayTopic + "/status"; //this will the topic that this script subscribes to in order to get updates on the current status of the accessory
+var relayTopic = 'feeds'       //this will be the topic that you publish to, to update the accessory
+var statusTopic = relayTopic + "/wifiButton01"; //this will the topic that this script subscribes to in order to get updates on the current status of the accessory
 
 ////////////////   CHANGE THESE VALUES FOR EVERY ACCESSORY   !!!!!!!!!!!!!//////////////////////////
 ////////////////   CHANGE THESE VALUES FOR EVERY ACCESSORY   !!!!!!!!!!!!!//////////////////////////
@@ -42,13 +42,16 @@ client.on('message', function(topic, message) {
 		if (message != 'p1' || message != 'p0') {   //ignore 'p0' and 'p1' moodlight activate/disable statuses
 
 		  	var messageParsed = message.toString();    //split the message into strings
-		  	console.log("Message = " + messageParsed);
 		  	if (messageParsed === 'true') {
 		  		ButtonController.power = true;
 		  		ButtonController.updateIOS();
 		  		ButtonController.updateHUE();
 		  	} else if (messageParsed === 'false') {
 		  		ButtonController.power = false;
+		  		ButtonController.updateIOS();
+		  		ButtonController.updateHUE();
+		  	} else if (messageParsed === '1') {
+		  		ButtonController.power = !ButtonController.power;
 		  		ButtonController.updateIOS();
 		  		ButtonController.updateHUE();
 		  	}
@@ -71,7 +74,9 @@ var ButtonController = {
 	outputLogs: true, //output logs
 
 	hueIds: [
-		'2'
+		'2',
+		'7',
+		'8'
 	],
 
   	//set power state of accessory
