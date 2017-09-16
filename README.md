@@ -32,7 +32,7 @@ We will be using the Raspberry pi as both the MQTT broker, and as the HAP-NodeJS
 
 1. [Install node](https://github.com/sdesalas/node-pi-zero) on the Raspberry pi
 1. Pull this repo into a working directory on the Raspberry pi
-1. Setup HAP-NodeJS to run using `forever` on boot ([link](https://github.com/legotheboss/YouTube-files/wiki/(RPi)-Start-HAP-on-Reboot))
+1. Setup HAP-NodeJS to run using `forever` on boot ([link](https://github.com/legotheboss/YouTube-files/wiki/(CHIP)-Start-HAP-on-Reboot)
 1. [Install mosquitto](https://learn.adafruit.com/diy-esp8266-home-security-with-lua-and-mqtt/configuring-mqtt-on-the-raspberry-pi) on the raspberry pi (Only follow steps 1-2)
 
 ### ESP8266 setup
