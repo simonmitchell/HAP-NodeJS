@@ -17,7 +17,7 @@ var ACCESSORY_SERIAL = '123456789abc'           //unique serial address for the 
 var MQTT_ID = 'homekit' + ACCESSORY_SERIAL
 var MQTT_IP = '127.0.0.1'
 
-var relayTopic = 'feeds'       //this will be the topic that you publish to, to update the accessory
+var relayTopic = '/feeds'       //this will be the topic that you publish to, to update the accessory
 var statusTopic = relayTopic + "/wifiButton01"; //this will the topic that this script subscribes to in order to get updates on the current status of the accessory
 
 ////////////////   CHANGE THESE VALUES FOR EVERY ACCESSORY   !!!!!!!!!!!!!//////////////////////////
