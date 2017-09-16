@@ -10,15 +10,15 @@ var philipsHue = require("./phillipsHue.js");
 
 //These 3 values MUST be unique for every accessory you make. If they are not then IOS may have issues and mess
 //the entire homekit setup and you will have to reset homekit on IOS.
-var ACCESSORY_NAME = "Living Room Button";     //give you accessory a name!
+var ACCESSORY_NAME = "Hallway Button";     //give you accessory a name!
 var ACCESSORY_USERNAME = "11:22:33:44:55:66";   //this is like a mac address for the accessory
-var ACCESSORY_SERIAL = '123456789abc'           //unique serial address for the accessory
+var ACCESSORY_SERIAL = '223456789abc'           //unique serial address for the accessory
 
 var MQTT_ID = 'homekit' + ACCESSORY_SERIAL
-var MQTT_IP = '192.168.1.155'
+var MQTT_IP = '127.0.0.1'
 
 var relayTopic = '/feeds'       //this will be the topic that you publish to, to update the accessory
-var statusTopic = relayTopic + "/wifiButton01"; //this will the topic that this script subscribes to in order to get updates on the current status of the accessory
+var statusTopic = relayTopic + "/wifiButton02"; //this will the topic that this script subscribes to in order to get updates on the current status of the accessory
 
 ////////////////   CHANGE THESE VALUES FOR EVERY ACCESSORY   !!!!!!!!!!!!!//////////////////////////
 ////////////////   CHANGE THESE VALUES FOR EVERY ACCESSORY   !!!!!!!!!!!!!//////////////////////////
@@ -74,9 +74,8 @@ var ButtonController = {
 	outputLogs: false, //output logs
 
 	hueIds: [
-		'2',
-		'7',
-		'8'
+		'1',
+		'4'
 	],
 
   	//set power state of accessory
