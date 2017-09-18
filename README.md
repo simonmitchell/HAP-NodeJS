@@ -41,16 +41,22 @@ We will be using the Raspberry pi as both the MQTT broker, and as the HAP-NodeJS
 1. [Download](https://mongoose-os.com/software.html) and install mongoose-os
 1. Connect the ESP8266 GPIO pin to ground to enable flashing mode on the chip. To do this I connected a switch to the correct pins on the back of my USB adapter so I can easily switch between flashing mode and normal mode.
 1. Plug the USB adapter into your computer, with the ESP8266 plugged in.
-1. Run this command in the terminal: `mos flash mos-esp8266-1M-latest` 
-1. When the terminal starts reading:
-```
-Connecting to ESP8266 ROM, attempt 1 of 10,
-Connecting to ESP8266 ROM, attempt 2 of 10,
-```
-plug in the ESP8266 module to the USB adapter.
-1. When flashing has succeeded run: `mos wifi ROUTER_SSID ROUTER_PASSWORD` and wait for the chip to be configured
+1. cd to `/esp8266/programme/` and then Run this command in the terminal: `rm -rf build/ && mos build --arch esp8266 && mos flash && mos` 
+1. When flashing has succeeded, unplug and re-plug in the adapter not in flashing mode, and then run: `mos wifi ROUTER_SSID ROUTER_PASSWORD` and wait for the chip to be configured
 
 #### Coding the device
 1. Run `mos` in the terminal, which should open up the mos gui in a browser window. Return your USB adapter to non-flashing mode and reinsert it with the ESP8266 attached. 
-1. Open `conf0.json` in the device file browser, and edit the `mqtt->server` property to be the IP address of your Raspberry Pi.
-1.  
+1. Open `conf9.json` in the device file browser, and add these lines: 
+```
+{
+    "mqtt": {
+        "enable": true, 
+        "server": "RASPBERRY_PI_IP:1883"
+    }
+}
+``` property to be the IP address of your Raspberry Pi.
+1. Configure the device's config:
+```
+mos call Config.Set '{"config": { "wifi": { "ap": { "enable": false } } } }'
+mos call Config.Save '{"reboot": true}'
+```
