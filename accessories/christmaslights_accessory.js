@@ -67,7 +67,7 @@ var LightController = {
 	serialNumber: ACCESSORY_SERIAL, //serial number (optional)
 
 	power: false, //curent power status
-	outputLogs: false, //output logs
+	outputLogs: true, //output logs
 
   	//set power state of accessory
  	setPower: function(status) { 
@@ -112,6 +112,7 @@ var LightController = {
 	updateStatus: function(status){
 		if (this.power != status) {
 			toPublish = "" + status;
+			if (this.outputLogs) console.log("Update status '%s' '%s' ", statusTopic, toPublish);
 			client.publish(statusTopic, toPublish);
 		}
 	}
@@ -129,7 +130,7 @@ bulb.on('identify', function(paired, callback) {
 	callback();
 });
 
-bulb.addService(Service.Lightbulb, "Lightbulb").getCharacteristic(Characteristic.On)
+bulb.addService(Service.Lightbulb, LightController.name).getCharacteristic(Characteristic.On)
 .on('get', function(callback) {
 	callback(null, LightController.getPower());
 })
