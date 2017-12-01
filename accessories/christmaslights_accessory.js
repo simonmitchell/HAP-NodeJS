@@ -109,7 +109,7 @@ var LightController = {
 	updateStatus: function(status){
 		if (this.power != status) {
 			// ESP8266 expects binary, not `true/false`
-			toPublish = "" + status ? "1" : "0";
+			toPublish = "" + (status ? "1" : "0");
 			if (this.outputLogs) console.log("Update status '%s' '%s' ", statusTopic, toPublish);
 			client.publish(statusTopic, toPublish);
 		}
