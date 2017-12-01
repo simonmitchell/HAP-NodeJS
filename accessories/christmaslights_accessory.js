@@ -41,14 +41,11 @@ client.on('message', function(topic, message) {
 		if (message != 'p1' || message != 'p0') {   //ignore 'p0' and 'p1' moodlight activate/disable statuses
 
 		  	var messageParsed = message.toString();    //split the message into strings
-		  	if (messageParsed === 'true') {
+		  	if (messageParsed === '1') {
 		  		LightController.power = true;
 		  		LightController.updateIOS();
-		  	} else if (messageParsed === 'false') {
+		  	} else if (messageParsed === '0') {
 		  		LightController.power = false;
-		  		LightController.updateIOS();
-		  	} else if (messageParsed === '1') {
-		  		LightController.power = !LightController.power;
 		  		LightController.updateIOS();
 		  	}
 		}
@@ -74,7 +71,7 @@ var LightController = {
 
  		if (this.outputLogs) console.log("'%s' is now %s. Was previously %s", this.name, status ? "on" : "off", this.power ? "on" : "off");
 
-	    if((status == true && this.power == false) || (status == false && this.power == true) ){
+	    if ((status == true && this.power == false) || (status == false && this.power == true) ){
 	      
 			//if turned on set the brightness to the last brightness before it was turned off 
 			if (status == true) {
