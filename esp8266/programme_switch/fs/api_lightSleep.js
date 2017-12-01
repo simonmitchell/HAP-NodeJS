@@ -1,4 +1,4 @@
-let LIGHTSLEEP = {
+let LightSleep = {
 	// ## **`Sys.deepSleep(microseconds)`**
  	// Deep Sleep given number of microseconds.
   	// Return value: none.
@@ -6,7 +6,11 @@ let LIGHTSLEEP = {
 	
 	getSleepType: ffi('int wifi_fpm_get_sleep_type(void)'),
 
-	enableLightSleep: ffi('void wifi_fpm_open(void)'),
+	enableLightSleep: ffi('void enableForceSleep(void)'),
 
-	sleep: ffi('sint wifi_fpm_do_sleep(void)'
+	setCallback: ffi('void setForceSleepCallback(void(*)(userdata), userdata)'),
+
+	sleep: ffi('int doSleep(int)')
+
+	// MAX_SLEEP_TIME:  
 };

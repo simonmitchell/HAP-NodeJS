@@ -12,21 +12,38 @@ load('api_lightSleep.js');
 let requestUrl = '';
 
 //...or set io.adafruit mqtt settings and set feed name here:
-let feedName = 'wifiButton04';
+let feedName = 'wifiButton01';
 
 //some millisecond settings. adjust to your needs
-let millisToTurnOff = 5*60000;
+let millisToTurnOff = 60000;
 //***********************************************
 
-// LIGHTSLEEP.setSleepType(1);
-// let sleepType = LIGHTSLEEP.getSleepType();
-// print("sleep type"+JSON.stringify(sleepType));
+// Whether to use deep sleep, or light sleep when sleeping. Deep sleep uses significantly less battery!
+let deepSleep = true;
+let sleep = false;
+
+// print("max sleep time "+JSON.stringify(0xFFFFFFF));
 
 //
-Timer.set(millisToTurnOff , false , function() {
-  print("deep sleep");
-  ESP8266.deepSleep(0);
-}, null);
+if (sleep) {
+	Timer.set(millisToTurnOff , false , function() {
+
+		if (deepSleep) {
+
+			ESP8266.deepSleep(0);
+
+		} else {
+
+			LightSleep.setSleepType(1);
+			LightSleep.enableLightSleep();
+			// LightSleep.setCallback(function() {
+	  //     		print("Woke from light sleep!");
+			// }, null);
+			LightSleep.sleep(0);
+		}
+
+	}, null);
+}
 
 //trying mqtt
 MQTT.setEventHandler(function(conn, ev, edata) 
