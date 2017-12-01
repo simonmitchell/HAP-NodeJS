@@ -67,7 +67,7 @@ var LightController = {
 	serialNumber: ACCESSORY_SERIAL, //serial number (optional)
 
 	power: false, //curent power status
-	outputLogs: true, //output logs
+	outputLogs: false, //output logs
 
   	//set power state of accessory
  	setPower: function(status) { 
@@ -111,7 +111,8 @@ var LightController = {
 	//Sends an mqtt update to the switch if needed
 	updateStatus: function(status){
 		if (this.power != status) {
-			toPublish = "" + status;
+			// ESP8266 expects binary, not `true/false`
+			toPublish = "" + status ? "1" : "0";
 			if (this.outputLogs) console.log("Update status '%s' '%s' ", statusTopic, toPublish);
 			client.publish(statusTopic, toPublish);
 		}
