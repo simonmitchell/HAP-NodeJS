@@ -25,6 +25,7 @@ var statusTopic = relayTopic + "/bulb1"; //this will the topic that this script 
 
 // MQTT Setup
 var mqtt = require('mqtt');
+var wemore = require('wemore');
 
 var options = {
 	port: 1883,
@@ -115,6 +116,17 @@ var LightController = {
 		}
 	}
 }
+
+// Amazon Alexa support! 🙌
+var wemoreBulb = wemore.Emulate({friendlyName: LightController.name, serial: LightController.username});
+wemoreBulb.on('on', function() {
+    LightController.setPower(true);
+});
+
+wemoreBulb.on('off', function() {
+    LightController.setPower(false);
+});
+
 
 var accUUID = uuid.generate('hap-nodejs:accessories:light' + LightController.name);
 
